@@ -12,9 +12,7 @@
     <link rel="stylesheet" href="TemplateData/style.css" />
   </head>
   <body class="dark">
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas"></canvas>
-    </div>
+    <canvas id="unity-canvas"></canvas>
     <div id="loading-cover" style="display: none">
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -25,21 +23,20 @@
       </div>
     </div>
     <div id="unity-fullscreen-button" style="display: none"></div>
-    <script type="module">
+    <script>
             const hideFullScreenButton = "";
             const buildUrl = "Build";
-            const loaderUrl = buildUrl + "/Build WebGL.loader.js";
+            const loaderUrl = buildUrl + "/Froggle.loader.js";
             const config = {
-              dataUrl: buildUrl + "/Build WebGL.data",
-              frameworkUrl: buildUrl + "/Build WebGL.framework.js",
-              codeUrl: buildUrl + "/Build WebGL.wasm",
+              dataUrl: buildUrl + "/Froggle.data",
+              frameworkUrl: buildUrl + "/Froggle.framework.js",
+              codeUrl: buildUrl + "/Froggle.wasm",
               streamingAssetsUrl: "StreamingAssets",
-              companyName: "DefaultCompany",
+              companyName: "AtomikRecord",
               productName: "FROGGLE",
               productVersion: "1.0",
             };
 
-            const container = document.querySelector("#unity-container");
             const canvas = document.querySelector("#unity-canvas");
             const loadingCover = document.querySelector("#loading-cover");
             const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
@@ -62,32 +59,29 @@
               return false;
             }());
 
-            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-              container.className = "unity-mobile";
-              config.devicePixelRatio = 1;
-            }
+            config.devicePixelRatio = 2;
             loadingCover.style.display = "";
+            var unityInstance = undefined;
             const script = document.createElement("script");
             script.src = loaderUrl;
             script.onload = () => {
-              import('./lib/thirdweb-unity-bridge.js').then(module => {
-                createUnityInstance(canvas, config, (progress) => {
-                  spinner.style.display = "none";
-                  progressBarEmpty.style.display = "";
-                  progressBarFull.style.width = `${100 * progress}%`;
-                }).then((unityInstance) => {
-                  loadingCover.style.display = "none";
-                  if (canFullscreen) {
-                    if (!hideFullScreenButton) {
-                      fullscreenButton.style.display = "";
-                    }
-                    fullscreenButton.onclick = () => {
-                      unityInstance.SetFullscreen(1);
-                    };
+              createUnityInstance(canvas, config, (progress) => {
+                spinner.style.display = "none";
+                progressBarEmpty.style.display = "";
+                progressBarFull.style.width = `${100 * progress}%`;
+              }).then((unityInstanceTemp) => {
+                unityInstance = unityInstanceTemp;
+                loadingCover.style.display = "none";
+                if (canFullscreen) {
+                  if (!hideFullScreenButton) {
+                    fullscreenButton.style.display = "";
                   }
-                }).catch((message) => {
-                  alert(message);
-                });
+                  fullscreenButton.onclick = () => {
+                    unityInstanceTemp.SetFullscreen(1);
+                  };
+                }
+              }).catch((message) => {
+                alert(message);
               });
             };
             document.body.appendChild(script);
