@@ -42373,8 +42373,8 @@ class WalletConnectV2 {
 		try {
 			this.connectCallback = connectCallback;
 			this.disconnectCallback = disconnectCallback;
-			this.apiNetworkProvider = new out/* ApiNetworkProvider */._l("https://api.multiversx.com");
-			this.proxyNetworkProvider = new out/* ProxyNetworkProvider */.mh("https://gateway.multiversx.com");
+			this.apiNetworkProvider = new out/* ApiNetworkProvider */._l("https://elrond-api.blastapi.io/fefc3ef5-703c-44e2-b42b-bfbe83cc3181");
+			this.proxyNetworkProvider = new out/* ProxyNetworkProvider */.mh("https://elrond-mainnet.blastapi.io/fefc3ef5-703c-44e2-b42b-bfbe83cc3181");
 
 			this.signClient = await index_es_ms.init({ projectId: this.projectId, relayUrl: this.relayUrl, metadata: this.metadata });
 
@@ -42605,7 +42605,7 @@ class WalletConnectV2 {
 
 	async signTransaction(receiver, value, message, gasLimit) {
 		try {
-			await getAccount();
+			await this.getAccount();
 			if (message.length > 0)
 				message = Buffer.from(message).toString('base64');
 
